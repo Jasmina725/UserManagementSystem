@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using UserManagementSystem.Data;
 using UserManagementSystem.Data.Abstraction;
 using UserManagementSystem.Data.Implementation;
+using UserManagementSystem.UserManagement;
+using UserManagementSystem.UserManagement.Abstraction;
+using UserManagementSystem.UserManagement.Implementation;
 
 namespace UserManagementSystem
 {
@@ -41,18 +44,32 @@ namespace UserManagementSystem
                     });
             });
             services.AddDbContext<UserManagementContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("UserManagementConnection")));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
+
+            services.AddScoped<IUserManager, UserManager>();
+            services.AddScoped<IPermissionManager, PermissionManager>();
+
+            services.AddSwaggerGen();
+
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(a => a.SwaggerEndpoint("./v1/swagger.json", "Users API V1"));
             }
+
+            app.UseMiddleware<ExeptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

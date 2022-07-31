@@ -10,9 +10,9 @@ namespace UserManagementSystem.Data
     public class UserManagementContext: DbContext
     {
         public DbSet<User> Users { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
-       
+        public DbSet<Permission> Permissions { get; set; }
+
 
         public UserManagementContext(DbContextOptions<UserManagementContext> options) : base(options)
         {
@@ -24,7 +24,7 @@ namespace UserManagementSystem.Data
             IEnumerable<Permission> permissions = new List<Permission>
             {
                 new Permission() { Id = 1, Code = "Admin", Description = "This is an admin permission."},
-                new Permission() { Id = 2, Code = "Editor", Description = "This is a editor permission."},
+                new Permission() { Id = 2, Code = "Editor", Description = "This is an editor permission."},
                 new Permission() { Id = 3, Code = "Reader", Description = "This is a reader permission."}
             };
 

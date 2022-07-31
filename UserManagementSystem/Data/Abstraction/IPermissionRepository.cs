@@ -9,10 +9,12 @@ namespace UserManagementSystem.Data.Abstraction
     public interface IPermissionRepository
     {
         Task<IEnumerable<Permission>> GetPermissions();
+        Task<Permission> CreatePermission(Permission permission);
         Task<Permission> GetPermissionById(int id);
         Task<IEnumerable<UserPermission>> GetUserPermissions(int userId);
-        Task AssignUserPermission(int userId, int permissionId);
-        Task RemoveUserPermission(UserPermission userPermission);
+        Task AssignUserPermissions(int userId, IEnumerable<int> permissionIds);
+        Task RemoveUserPermissions(int userId, IEnumerable<int> permissionIds);
+        Task DeletePermission(Permission permission);
         Task<bool> SaveChanges();
     }
 }

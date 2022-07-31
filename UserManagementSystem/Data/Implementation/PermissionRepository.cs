@@ -10,16 +10,28 @@ namespace UserManagementSystem.Data.Implementation
 {
     public class PermissionRepository : IPermissionRepository
     {
-        UserManagementContext _context;
+        private readonly UserManagementContext _context;
 
         public PermissionRepository(UserManagementContext context)
         {
             _context = context;
         }
 
-        public async Task AssignUserPermission(int userId, int permissionId)
+        public async Task AssignUserPermissions(int userId, IEnumerable<int> permissionIds)
         {
-            await _context.UserPermissions.AddAsync(new UserPermission() { UserFK = userId, PermissionFK = permissionId });
+            var permissionsToAdd = permissionIds.Select(id => new UserPermission() { UserId = userId, PermissionId = id });
+            await _context.UserPermissions.AddRangeAsync(permissionsToAdd);
+        }
+
+        public async Task<Permission> CreatePermission(Permission permission)
+        {
+            return (await _context.Permissions.AddAsync(permission)).Entity;
+        }
+
+        public async Task DeletePermission(Permission permission)
+        {
+            _context.Permissions.Remove(permission);
+            await SaveChanges();
         }
 
         public async Task<Permission> GetPermissionById(int id)
@@ -30,17 +42,17 @@ namespace UserManagementSystem.Data.Implementation
         public async Task<IEnumerable<Permission>> GetPermissions()
         {
             return await _context.Permissions.ToListAsync();
-        }
+        }        
 
         public async Task<IEnumerable<UserPermission>> GetUserPermissions(int userId)
         {
-            return await _context.UserPermissions.Where(up => up.UserFK.Equals(userId)).Include(a => a.Permission).ToListAsync();
+            return await _context.UserPermissions.Where(up => up.UserId.Equals(userId)).Include(a => a.Permission).ToListAsync();
         }
 
-        public async Task RemoveUserPermission(UserPermission userPermission)
+        public async Task RemoveUserPermissions(int userId, IEnumerable<int> permissionIds)
         {
-            _context.UserPermissions.Remove(userPermission);
-            await SaveChanges();
+            var remove = await _context.UserPermissions.Where(up => up.UserId.Equals(userId) && permissionIds.Contains(up.PermissionId)).ToListAsync();
+            _context.UserPermissions.RemoveRange(remove);
         }
 
         public async Task<bool> SaveChanges()
@@ -49,3 +61,6 @@ namespace UserManagementSystem.Data.Implementation
         }
     }
 }
+
+
+

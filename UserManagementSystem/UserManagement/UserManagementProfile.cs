@@ -12,10 +12,11 @@ namespace UserManagementSystem.UserManagement
     {
         public UserManagementProfile()
         {
-            CreateMap<User, UserViewModel>().ReverseMap();
+            CreateMap<User, UserReadDto>().ReverseMap();
+            CreateMap<User, UserCreateDto>().ReverseMap();
             CreateMap<Permission, PermissionViewModel>().ReverseMap();
             CreateMap<UserPermission, UserPermissionViewModel>().ReverseMap();
-        }
-      
+            CreateMap<Permission, PermissionCreateDto>().ReverseMap();
+        }      
     }
 }

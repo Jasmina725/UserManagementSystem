@@ -2,7 +2,7 @@
 
 namespace UserManagementSystem.Data.Migrations
 {
-    public partial class Seeding : Migration
+    public partial class SeedingData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace UserManagementSystem.Data.Migrations
                 values: new object[,]
                 {
                     { 1, "Admin", "This is an admin permission." },
-                    { 2, "Editor", "This is a editor permission." },
+                    { 2, "Editor", "This is an editor permission." },
                     { 3, "Reader", "This is a reader permission." }
                 });
 
