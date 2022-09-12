@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using UserManagementSystem.UserManagement.Models;
 
 namespace UserManagementSystem.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : Controller
@@ -17,7 +19,7 @@ namespace UserManagementSystem.API.Controllers
 
         public UsersController(IUserManager manager)
         {
-            _manager = manager;           
+            _manager = manager;
         }
 
         [HttpGet]
@@ -30,6 +32,7 @@ namespace UserManagementSystem.API.Controllers
         [HttpGet("{id}")]
         public async Task<ApiResponse<UserReadDto>> GetUserById([FromRoute] int id)
         {
+            var aa = HttpContext.Request;
             var user = await _manager.GetUserById(id);
             return ApiResponse<UserReadDto>.Ok(user);
         }

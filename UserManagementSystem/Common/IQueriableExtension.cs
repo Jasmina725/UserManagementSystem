@@ -22,7 +22,6 @@ namespace UserManagementSystem.Common
         {
             if (order.Key == null)
                 return query;
-            Expression<Func<T, string>> parameter = CreateSelectorExpression<T>(order.Key);
             
             return order.Direction.Equals(Direction.Asc) ? query.OrderBy(CreateSelectorExpression<T>(order.Key)) : 
                                                query.OrderByDescending(CreateSelectorExpression<T>(order.Key));
